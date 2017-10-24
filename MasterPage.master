@@ -1,0 +1,100 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Assignment Distribution App</title>
+    <link href="Styles/Menu.css" rel="stylesheet" />
+    <link href="Styles/Style.css" rel="stylesheet" />
+    <link href="Style/themes/base/jquery.ui.all.css" rel="stylesheet" /> 
+    <script src="Scripts/jquery-1.11.0.min.js"></script>
+    <script src="Scripts/jquery-ui.js"></script>
+    <script src="Scripts/jquery.json.js"></script>
+
+    <!--Richtext Editor File-->
+    <script src="ckeditor/ckeditor.js"></script>
+    <script>
+
+        CKEDITOR.on('instanceCreated', function (event) {
+            var editor = event.editor,
+                element = editor.element;
+
+            editor.config.enterMode = CKEDITOR.ENTER_BR; //Prevent extra line when press enter
+
+            // Customize the editor configurations on "configLoaded" event,
+            // which is fired after the configuration file loading and
+            // execution. This makes it possible to change the
+            // configurations before the editor initialization takes place.
+            editor.on('configLoaded', function () {
+
+                editor.config.enterMode = CKEDITOR.ENTER_BR; //Prevent extra line when press enter
+                editor.config.resize_enabled = false;
+                //editor.config.width = 450;     // 500 pixels wide.
+                //editor.config.height = 500;        // 500 pixels high.
+                editor.config.removePlugins = 'elementspath';
+
+                editor.config.toolbar = [
+                         { name: 'document', groups: ['mode'], items: ['Source'] },
+                         { name: 'basicstyles', groups: ['basicstyles'], items: ['Bold', 'Italic', 'Underline', 'RemoveFormat'] },
+                         { name: 'paragraph', groups: ['list', 'indent'], items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] }
+                ];
+            });
+        });
+
+	</script>
+
+  
+    <style type="text/css">
+        .auto-style1 {
+            width: 800px;
+            height: 200px;
+            
+        }
+        .auto-style2 {
+            width: 800px;
+            height: 100%;
+        }
+    </style>
+
+  
+</head>
+<body>
+    <form id="form1" runat="server">   
+    <div id="header-wrap">
+        <div id="header-container">
+            
+            <table cellpadding="2" cellspacing="0" class="auto-style1" align="center">
+                <tr>
+                    <td style="height: px;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="border-width: 1px; border-color: #FFFFFF; height: 98px; border-right-style: solid; border-left-style: solid; border-top-style: solid; background-color: #99CCFF;">&nbsp;</td>
+                </tr>
+            </table>
+            
+        </div>                
+    </div>       
+    <div id="container">
+       
+
+          <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                       
+                        </asp:ContentPlaceHolder>   
+    </div>
+    <div id="footer-wrap">
+        <div id="footer-container">
+
+        </div>
+    </div>
+    <div id="page-cover"></div>   
+    <div id="DivForm">  
+        <div id="result"></div>        
+    </div>
+        
+    <div id="DivWaitingForm">
+        <img src="Images/ajax-loader2.gif" />
+    </div>     
+    </form>
+</body>
+</html>
