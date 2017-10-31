@@ -1553,8 +1553,9 @@ public class AppData
                 command.CommandType = CommandType.Text;
                 command.CommandText = @"        SELECT assigns.* 
                                                 FROM [Courses_Assigned] assigns
+                                                    ,[Courses] courses
                                                 Where assigns.UserID = @userID
-                                              
+                                                And   assigns.CourseID = courses.CourseID
                             ";
 
                 sda.SelectCommand = command;
