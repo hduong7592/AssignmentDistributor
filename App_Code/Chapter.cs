@@ -15,6 +15,7 @@ public class Chapter
     public string aCount;
     public string aName;
     public int aID;
+    public string aDes;
 
     public Chapter(int chapterID)
     {
@@ -42,6 +43,7 @@ public class Chapter
             Assignment assignment = new Assignment(aID);
             this.aName = assignment.GetAssignmentName();
             this.aID = aID;
+            this.aDes = assignment.GetAssignmentDes();
         }
     }
 

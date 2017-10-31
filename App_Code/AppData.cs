@@ -532,6 +532,56 @@ public class AppData
 
     }
 
+    public static DataTable GetAllCourses(int userID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"        SELECT courses.* 
+                                                FROM [Courses] courses
+                                                Where courses.Active = 'Yes'
+                                                And courses.CourseID NOT IN 
+                                                    (Select assigned.CourseID
+												    From [Courses_Assigned] assigned
+												    Where assigned.UserID = @userID)
+                                              
+                            ";
+                
+                sda.SelectCommand = command;
+                command.Parameters.AddWithValue("@userID", userID);
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
     public static DataTable GetCourseDetail(int courseID)
     {
         string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
@@ -1535,6 +1585,55 @@ public class AppData
 
     }
 
+    public static DataTable GetAssignedCourses(int userID, int courseID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"        SELECT assigns.* 
+                                                FROM [Courses_Assigned] assigns
+                                                Where assigns.UserID = @userID
+                                                And   assigns.CourseID = @courseID
+                            ";
+
+                sda.SelectCommand = command;
+
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@courseID", courseID);
+
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
     public static DataTable GetAssignedAssignmentsCount(int userID, int courseID)
     {
         string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
@@ -1645,5 +1744,59 @@ public class AppData
         }
         return dt;
 
+    }
+
+    public static string AssignCourse(int courseID, int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"INSERT INTO [Courses_Assigned]
+                                        (
+                                               [UserID]
+                                              ,[CourseID]
+                                              ,[Added_by]
+                                              ,[Added_datetime]                                                                                                                 
+                                        )
+                            VALUES      (
+                                            @userID 
+                                            ,@courseID                                            
+                                            ,@userID                                         
+                                            ,@datetime
+                                        )";
+                
+                command.Parameters.AddWithValue("@courseID", courseID);
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@Active", "Yes");
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception e)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
     }
 }

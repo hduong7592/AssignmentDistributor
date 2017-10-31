@@ -32,6 +32,11 @@ public class Assignment
         return aName;
     }
 
+    public string GetAssignmentDes()
+    {
+        return aDescription;
+    }
+
     public static int GetAssignmenCount(int chapterID)
     {
         int assignmentCount = 0;

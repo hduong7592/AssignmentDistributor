@@ -304,6 +304,39 @@ public class WebService : System.Web.Services.WebService
         return result;
     }
 
+
+    [WebMethod(EnableSession = true)]
+    public string GetAllCourses(int userID)
+    {
+        DataTable CoursesTB = AppData.GetAllCourses(userID);
+        List<Course> courseList = new List<Course>();
+
+        if (CoursesTB.Rows.Count > 0)
+        {
+            foreach (DataRow row in CoursesTB.Rows)
+            {
+
+                int courseID = 0;
+                try
+                {
+                    courseID = Convert.ToInt32(row["CourseID"]);
+                }
+                catch
+                {
+                    courseID = 0;
+                }
+
+                Course newCourse = new Course(courseID);
+                courseList.Add(newCourse);
+            }
+        }
+
+        JavaScriptSerializer js = new JavaScriptSerializer();
+
+        string result = "{\"Courses\":" + js.Serialize(courseList) + "}";
+        return result;
+    }
+
     [WebMethod(EnableSession = true)]
     public string AddUnit(string unitName, int courseID, int userID)
     {
@@ -607,6 +640,24 @@ public class WebService : System.Web.Services.WebService
         JavaScriptSerializer js = new JavaScriptSerializer();
 
         string result = "{\"Assignments\":" + js.Serialize(list) + "}";
+        return result;
+    }
+
+    [WebMethod(EnableSession = true)]
+    public string AssignCourse(int courseID, int userID)
+    {
+        string result = "";
+
+        DataTable CheckCourseExist = AppData.GetAssignedCourses(userID, courseID);
+        if (CheckCourseExist.Rows.Count > 0)
+        {
+            result = "Exist";
+        }
+        else
+        {
+            result = AppData.AssignCourse(courseID, userID);
+        }
+
         return result;
     }
 
