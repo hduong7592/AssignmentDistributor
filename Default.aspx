@@ -64,6 +64,78 @@
             );
         }
 
+        function ValidateLogIn(SessionID) {
+            var Username = $("#UsernameTxt").val();
+            var Password = $("#PasswordTxt").val();
+            if (Username == "") {
+                alert("Username is missing!");
+                $("#UsernameTxt").focus();
+                return false;
+            }
+            else if (Password == "") {
+                alert("Password is missing!");
+                $("#PasswordTxt").focus();
+                return false;
+            }
+            else {
+                LogUserIn(Username, Password, SessionID);
+            }
+
+        }
+
+        function LogUserIn(Username, Password, SessionID) {
+            var t = new Date().getTime();
+
+            var obj = '{"Username": "' + Username +
+                '","Password": "' + Password +
+                '","SessionID": "' + SessionID +
+                '","time": "' + t +
+                '" }';
+            //alert(obj);
+            $.ajax({
+                type: "POST",
+                url: "WebService.asmx/WebLogIn",
+                data: obj,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var data = JSON.parse(response.d);
+                    alert(data.Status);
+                    if (data.length > 0) {
+                        
+                    }
+                   
+                    /*
+                    //alert(data);
+                    if (data == "Error") {
+                        alert("Error");
+                        return false;
+                    }
+                    else if (data == "Not Exist") {
+                        alert("User not exist");
+                        return false;
+                    }
+                    else if (data == "Password Incorrect") {
+                        alert("Password is incorrect!");
+                        return false;
+                    }
+                    else {
+                        LoggedIn(data);
+                        HideWaitToLoad();
+                        HideCover();
+                        Close();
+                    }
+                    */
+                },
+                error: function (response) {
+                    //alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                    alert("Error "+ response.d);
+                    ShowError();
+                }
+            });   
+        }
+
         function Close() {
             $("#DivForm").hide();
             $("#page-cover").hide();   
@@ -89,6 +161,108 @@
                 }
             );
         }
+
+        function ValidateRegisterForm(SessionID) {
+            //alert(SessionID);
+            var Code = $("#CodeTxt").val();
+            var FirstName = $("#FirstNameTxt").val();
+            var LastName = $("#LastNameTxt").val();
+            var Email = $("#EmailTxt").val();
+            var Username = $("#UsernameTxt").val();
+            var Password = $("#PasswordTxt").val();
+            var RePassword = $("#RePasswordTxt").val();
+
+            if (Code == "") {
+                alert("Code is required!");
+                $("#CodeTxt").focus();
+                return false;
+            }
+            else if (FirstName == "") {
+                alert("First Name is required!");
+                $("#FirstNameTxt").focus();
+                return false();
+            }
+            else if (LastName == "") {
+                alert("Last Name is required!");
+                $("#LastNameTxt").focus();
+                return false();
+            }
+            else if (Email  == "") {
+                alert("Email  is required!");
+                $("#EmailTxt").focus();
+                return false();
+            }
+            else if (Username == "") {
+                alert("Username is required!");
+                $("#UsernameTxt").focus();
+                return false();
+            }
+            else if (Password == "") {
+                alert("Password is required!");
+                $("#PasswordTxt").focus();
+                return false();
+            }
+            else if (RePassword == "") {
+                alert("Confirm password is required!");
+                $("#RePasswordTxt").focus();
+                return false();
+            }
+            else if (Password != RePassword) {
+                alert("Password does not match!");
+                return false;
+            }
+            else {
+                var t = new Date().getTime();
+
+                var obj = '{"Code": "' + Code +
+                            '","FirstName": "' + FirstName +
+                            '","LastName": "' + LastName +
+                            '","Email": "' + Email +
+                            '","Username": "' + Username +
+                            '","Password": "' + Password +                  
+                            '","time": "' + t +
+                            '" }';
+
+                $.ajax({
+                    type: "POST",
+                    url: "WebService.asmx/Register",
+                    data: obj,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                       
+                        var data = JSON.parse(response.d);
+                        alert(data.Status);                      
+
+                        //alert(data);
+                        /*
+                        if (data == "Error") {
+                            alert("Error");
+                        }
+                        else if (data == "Exist") {
+                            alert("Username already exist!");
+                        }
+                        else {
+                            LogUserIn(Username, Password, SessionID);
+                            HideWaitToLoad();
+                            HideCover();
+                            Close();
+                        }
+                        */
+                    },
+                    error: function (response) {
+                        //alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                        //alert(response);
+                        ShowError();
+                    }
+                });     
+            }
+        }
+
+        function LoggedIn(SessionID) {
+            alert("Logged in: "+SessionID);
+        }
+
     </script>
     <table align="center" cellpadding="2" style="height: 800px; width: 800px;">
         <tr>

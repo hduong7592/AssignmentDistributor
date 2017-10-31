@@ -32,9 +32,9 @@ public partial class _Default : System.Web.UI.Page
     {
         string Username = UserTxt.Text;
         string Password = PassTxt.Text;
-        string result = AppData.AddNewUser(Username, Password);
-        Label1.Text = result;
-        GetData();
+        //string result = AppData.AddNewUser(Username, Password);
+        //Label1.Text = result;
+        //GetData();
     }
 
     protected void SendmailBtn_Click(object sender, EventArgs e)

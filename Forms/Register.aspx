@@ -48,7 +48,7 @@
                 <tr>
                     <td class="register-auto-style2">Username:</td>
                     <td>
-                        <input id="UsernamedTxt" class="register-auto-style4" type="text"  /></td>
+                        <input id="UsernameTxt" class="register-auto-style4" type="text"  /></td>
                 </tr>
                 <tr>
                     <td class="register-auto-style2">Password:</td>
@@ -62,7 +62,7 @@
                 </tr>
                 <tr>
                     <td class="register-auto-style3" colspan="2">
-                        <input id="RegisterBtn" type="button" value="Submit" />
+                        <input id="RegisterBtn" type="button" value="Submit" runat="server"/>
                         <input id="CancelBtn" type="button" value="Cancel" onclick="Close();" /></td>
                 </tr>               
             </table>

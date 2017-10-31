@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <td class="login-auto-style3" colspan="2">
-                        <input id="LoginBtn" type="button" value="Login" />
+                        <input id="LoginBtn" type="button" value="Login" runat="server" />
                         <input id="CancelBtn" type="button" value="Cancel" onclick="Close();" /></td>
                 </tr>
             </table>

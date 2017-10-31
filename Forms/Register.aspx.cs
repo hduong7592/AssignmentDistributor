@@ -9,10 +9,21 @@ public partial class Forms_Register : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        string WhichUser = Request.Form["WhichUser"].ToString();
-        if(WhichUser == "Student")
+        if (!IsPostBack)
         {
-            CodeTxt.Value = "STUDENT";
+            string WhichUser = Request.Form["WhichUser"].ToString();
+            if (WhichUser == "Student")
+            {
+                CodeTxt.Value = "STUDENT";
+            }
+
+            //Session.Clear();
+            //Session.Abandon();
+
+            string SessionID = this.Session.SessionID;            
+        
+            RegisterBtn.Attributes.Add("onclick", "ValidateRegisterForm('"+ SessionID + "');");
         }
+        
     }
 }
