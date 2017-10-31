@@ -14,6 +14,7 @@ using System.Web.Script.Serialization;
 
 /// <summary>
 /// Summary description for WebService
+/// Just made some changes to this
 /// </summary>
 [WebService(Namespace = "http:/myaddb.azurewebsites.net/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
