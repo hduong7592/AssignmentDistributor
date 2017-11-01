@@ -430,6 +430,153 @@ public class AppData
         return insertresult;
     }
 
+    public static string UpdateSession(string SessionID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"UPDATE  [LogedIn_Logs]
+                                        SET  [Validate] = 'No'
+                                            ,[Updated_datetime] = @datetime
+                                        WHERE [SessionID] = @SessionID
+                                        ";
+
+                command.Parameters.AddWithValue("@SessionID", SessionID);
+              
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception e)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static DataTable CheckSession(string SessionID, string Username)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"        SELECT logs.* 
+                                                FROM [LogedIn_Logs] logs
+                                                Where logs.SessionID = @SessionID
+                                                And   logs.Username = @Username
+                                                And   logs.Validate = 'Yes'
+                            ";
+
+                sda.SelectCommand = command;
+
+                command.Parameters.AddWithValue("@SessionID", SessionID);
+                command.Parameters.AddWithValue("@Username", Username);
+
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
+    public static DataTable GetSessionData(string SessionID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"        SELECT  logs.* 
+		                                                ,users.UserID
+                                                        ,users.UserRefID
+                                                FROM    [LogedIn_Logs] logs
+														,[Users] users
+                                                Where	logs.Username = users.Username
+												And		logs.SessionID = '0r1yyoi11kwvm0zka5gaunl5'                                               
+                                                And		logs.Validate = 'Yes'
+                            ";
+
+                sda.SelectCommand = command;
+
+                command.Parameters.AddWithValue("@SessionID", SessionID);                
+
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
     public static string AddCourse(string courseName, string courseSession, int userID)
     {
 
@@ -1802,5 +1949,63 @@ public class AppData
 
         }
         return insertresult;
+    }
+
+    public static DataTable GetAdminnData()
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"         Select (courses.CourseName + ' - ' + courses.CourseSession) as CourseName
+	                                                    ,(chapters.ChapterName + ': ' + chapters.ChapterDescription) as Chapter
+	                                                    ,assignments.aDescription as Assignment
+	                                                    ,(Select users.FirstName + ' ' + users.LastName
+		                                                    From [Users] users
+		                                                    Where users.UserID = assigned.UserID) as AssignedTo
+
+                                                  From [Courses] courses
+		                                                ,[Chapters] chapters
+		                                                ,[Assignments] assignments
+		                                                LEFT OUTER JOIN [Assignments_Assigned] assigned
+		                                                ON assignments.aID = assigned.aID
+		
+		
+                                                 Where courses.CourseID = chapters.CourseID
+                                                 And   chapters.ChapterID = assignments.ChapterID
+                            ";
+
+                sda.SelectCommand = command;
+               
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
     }
 }

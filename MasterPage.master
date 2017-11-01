@@ -47,32 +47,17 @@
   
     <style type="text/css">
         .auto-style1 {
-            width: 800px;
-            height: 200px;
-            
-        }
-        .auto-style2 {
-            width: 800px;
-            height: 100%;
+            color: #FFFFFF;
         }
     </style>
 
   
-</head>
+    </head>
 <body>
     <form id="form1" runat="server">   
     <div id="header-wrap">
-        <div id="header-container">
-            
-            <table cellpadding="2" cellspacing="0" class="auto-style1" align="center">
-                <tr>
-                    <td style="height: px;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="border-width: 1px; border-color: #FFFFFF; height: 98px; border-right-style: solid; border-left-style: solid; border-top-style: solid; background-color: #99CCFF;">&nbsp;</td>
-                </tr>
-            </table>
-            
+        <div id="header-container">            
+           
         </div>                
     </div>       
     <div id="container">
@@ -84,6 +69,14 @@
     </div>
     <div id="footer-wrap">
         <div id="footer-container">
+
+            <table align="center" cellpadding="2" style="width:100%; height: 50px;">
+                <tr>
+                    <td style="width: 33%">&nbsp;</td>
+                    <td style="width: 33%; text-align: center" class="auto-style1"><span><strong>@author: Hieu Duong</strong></span></td>
+                    <td style="width: 33%">&nbsp;</td>
+                </tr>
+            </table>
 
         </div>
     </div>

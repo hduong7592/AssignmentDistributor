@@ -65,7 +65,7 @@ public class WebService : System.Web.Services.WebService
 
         return js.Serialize(currentuser);       
     }
-
+    /*
     [WebMethod]
     public User LogIn(string Username, string Password, string SessionID)
     {
@@ -133,11 +133,11 @@ public class WebService : System.Web.Services.WebService
     */
 
     [WebMethod(EnableSession = true)]
-    public string LogIn(string Username, string Password, string SessionID, string logfrom)
+    public string LogIn(string Username, string Password, string logfrom)
     {
         string status = "Not LoggedIn";
         string UserRefID = "";
-        SessionID = Session["CurrentSession"].ToString().Trim();
+        string SessionID = Session["CurrentSession"].ToString().Trim();
         string Validate = "No";
         LogIn userlogin = new LogIn(Username, Password);
         bool IsExist = userlogin.CheckUserExist();
@@ -160,7 +160,15 @@ public class WebService : System.Web.Services.WebService
             status = "Not Exist";
         }
 
-        AppData.SaveLoginSession(SessionID, Username, status, Validate, logfrom);
+        DataTable CheckSession = AppData.CheckSession(SessionID, Username);
+        if(CheckSession.Rows.Count > 0)
+        {
+
+        }
+        else
+        {
+            AppData.SaveLoginSession(SessionID, Username, status, Validate, logfrom);
+        }       
 
         User currentuser = new User(UserRefID, SessionID, status);
 

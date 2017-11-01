@@ -84,4 +84,14 @@ public class User
             this.UserID = 0;
         }
     }
+
+    public string GetUserName()
+    {
+        return this.FirstName + " " + this.LastName;
+    }
+
+    public int GetUserRole()
+    {
+        return UserRole;
+    }
 }
