@@ -40,6 +40,7 @@
             AppData.UpdateSession(SessionID);
             Session.Clear();
             Session.Abandon();
+            Response.Redirect("Default.aspx");
         }
         catch(Exception ex)
         {
