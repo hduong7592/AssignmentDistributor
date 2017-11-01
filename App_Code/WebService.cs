@@ -133,13 +133,12 @@ public class WebService : System.Web.Services.WebService
     */
 
     [WebMethod(EnableSession = true)]
-    public string MobileLogIn(string Username, string Password, string SessionID)
+    public string LogIn(string Username, string Password, string SessionID, string logfrom)
     {
         string status = "Not LoggedIn";
         string UserRefID = "";
-        SessionID = Session["CurrentSession"].ToString() + "-Mobile";
+        SessionID = Session["CurrentSession"].ToString().Trim();
         string Validate = "No";
-
         LogIn userlogin = new LogIn(Username, Password);
         bool IsExist = userlogin.CheckUserExist();
         if (IsExist)
@@ -161,7 +160,7 @@ public class WebService : System.Web.Services.WebService
             status = "Not Exist";
         }
 
-        AppData.SaveLoginSession(SessionID, Username, status, Validate);
+        AppData.SaveLoginSession(SessionID, Username, status, Validate, logfrom);
 
         User currentuser = new User(UserRefID, SessionID, status);
 
@@ -169,14 +168,14 @@ public class WebService : System.Web.Services.WebService
 
         return js.Serialize(currentuser);
     }
-
+    /*
     [WebMethod]
-    public string WebLogIn(string Username, string Password, string SessionID)
+    public string WebLogIn(string Username, string Password, string SessionID, string logfrom)
     {
         string status = "Not LoggedIn";
         string UserRefID = "";
         string Validate = "No";
-
+        string logfrom = "Web";
         LogIn userlogin = new LogIn(Username, Password);
         bool IsExist = userlogin.CheckUserExist();
         if (IsExist)
@@ -198,14 +197,14 @@ public class WebService : System.Web.Services.WebService
             status = "Not Exist";
         }
 
-        AppData.SaveLoginSession(SessionID, Username, status, Validate);
+        AppData.SaveLoginSession(SessionID, Username, status, Validate, logfrom);
 
         User currentuser = new User(UserRefID, SessionID, status);
 
         JavaScriptSerializer js = new JavaScriptSerializer();
 
         return js.Serialize(currentuser);
-    }
+    }*/
 
     [WebMethod]
     public void GetUserInfo(int UserID)

@@ -370,7 +370,7 @@ public class AppData
         return insertresult;
     }
 
-    public static string SaveLoginSession(string SessionID, string Username, string Status, string Validate)
+    public static string SaveLoginSession(string SessionID, string Username, string Status, string Validate, string logfrom)
     {
 
         string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
@@ -390,7 +390,8 @@ public class AppData
                                               ,[Username]
                                               ,[Status]
                                               ,[Validate]
-                                              ,[Added_datetime]                                                                                                                                                               
+                                              ,[Added_datetime]  
+                                              ,[Logfrom]
                                         )
                             VALUES      (
                                             @SessionID
@@ -398,12 +399,14 @@ public class AppData
                                             ,@Status
                                             ,@Validate
                                             ,@datetime
+                                            ,@logfrom
                                         )";
 
                 command.Parameters.AddWithValue("@SessionID", SessionID);
                 command.Parameters.AddWithValue("@Username", Username);
                 command.Parameters.AddWithValue("@Status", Status);
                 command.Parameters.AddWithValue("@Validate", Validate);
+                command.Parameters.AddWithValue("@logfrom", logfrom);
                 command.Parameters.AddWithValue("@datetime", DateTime.Now);
 
                 try

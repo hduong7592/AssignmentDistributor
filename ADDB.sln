@@ -1,27 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ADDB", ".", "{5F863176-B6C0-4E8E-AAD3-76AC45806CB4}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "AssignmentDistributor", ".", "{5F863176-B6C0-4E8E-AAD3-76AC45806CB4}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_51075"
-		Debug.AspNetCompiler.PhysicalPath = "..\ADDB\"
+		Debug.AspNetCompiler.PhysicalPath = "..\AssignmentDistributor\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51075\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_51075"
-		Release.AspNetCompiler.PhysicalPath = "..\ADDB\"
+		Release.AspNetCompiler.PhysicalPath = "..\AssignmentDistributor\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51075\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "51075"
-		SlnRelativePath = "..\ADDB\"
+		SlnRelativePath = "..\AssignmentDistributor\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
@@ -35,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7AE9D50C-67B6-4148-AFC5-7586199C4565}
 	EndGlobalSection
 EndGlobal
