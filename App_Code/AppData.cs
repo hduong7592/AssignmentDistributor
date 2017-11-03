@@ -2400,6 +2400,8 @@ public class AppData
 		
                                                  Where courses.CourseID = chapters.CourseID
                                                  And   chapters.ChapterID = assignments.ChapterID
+                                                 Order by   courses.CourseID asc
+                                                            ,chapters.ChapterID asc
                             ";
 
                 sda.SelectCommand = command;
@@ -2459,6 +2461,8 @@ public class AppData
                                                  Where courses.CourseID = chapters.CourseID
                                                  And   chapters.ChapterID = assignments.ChapterID
                                                  And   courses.Added_by = @userID 
+                                                 Order by   courses.CourseID asc
+                                                            ,chapters.ChapterID asc
                             ";
 
                 sda.SelectCommand = command;
@@ -2517,6 +2521,8 @@ public class AppData
 												     And   assignments.aID = assigned.aID   
 												     And   assigned.UserID = @userID                                      
                                                      And   cassigned.UserID = @userID
+                                                     Order by   courses.CourseID asc
+                                                                ,chapters.ChapterID asc
                             ";
 
                 sda.SelectCommand = command;
