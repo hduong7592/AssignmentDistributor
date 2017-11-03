@@ -259,6 +259,7 @@ function LoggedIn(SessionID) {
     var t = new Date().getTime();
     ShowCover();
     WaitToLoad();
+    $("#myhome").empty();
     $("#myhome").load("Display/Home.aspx #HomeDiv",
         {      
             SessionID: SessionID,
@@ -271,10 +272,47 @@ function LoggedIn(SessionID) {
             else {
                
             }
+
+            HideWaitToLoad();
+            HideCover();
+            Close();
         }
     ).hide().fadeIn(1000);
 }
 
 function Logout(SessionID) {
-    alert("Logged out: " + SessionID);
+    //alert("Logged out: " + SessionID);
+
+    var t = new Date().getTime();
+    $("#myhome").empty();
+    ShowCover();
+    WaitToLoad();
+    var obj = '{"SessionID": "' + SessionID +       
+                '","time": "' + t +
+                '" }';
+
+    $.ajax({
+        type: "POST",
+        url: "../WebService.asmx/Logout",
+        data: obj,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+
+            var status= response.d;   
+            if (status == "Success") {               
+                window.location.href = "Default.aspx";
+            }
+
+            HideWaitToLoad();
+            HideCover();
+            Close();
+
+        },
+        error: function (response) {
+            //alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+            //alert(response);
+            ShowError();
+        }
+    });
 }

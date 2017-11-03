@@ -19,6 +19,7 @@ public class User
     public int UserRole;
     public string SessionID;
     public string Status;
+    public string RoleDescription;
 
     public User()
     {
@@ -36,6 +37,7 @@ public class User
             this.Username = UserInfo.Rows[0]["Username"].ToString();
             this.RefID = UserInfo.Rows[0]["UserRefID"].ToString();
             this.UserRole = Convert.ToInt32(UserInfo.Rows[0]["UserRole"]);
+            this.RoleDescription = UserInfo.Rows[0]["RoleName"].ToString();
             this.Status = "NA";
         }
         else
@@ -56,6 +58,8 @@ public class User
             this.Username = UserInfo.Rows[0]["Username"].ToString();
             this.RefID = UserInfo.Rows[0]["UserRefID"].ToString();
             this.UserRole = Convert.ToInt32(UserInfo.Rows[0]["UserRole"]);
+            this.RoleDescription = UserInfo.Rows[0]["RoleName"].ToString();
+            this.Status = "NA";
         }
         else
         {
@@ -78,6 +82,7 @@ public class User
             this.Username = UserInfo.Rows[0]["Username"].ToString();
             this.RefID = UserInfo.Rows[0]["UserRefID"].ToString();
             this.UserRole = Convert.ToInt32(UserInfo.Rows[0]["UserRole"]);
+            this.RoleDescription = UserInfo.Rows[0]["RoleName"].ToString();
         }
         else
         {
@@ -93,5 +98,10 @@ public class User
     public int GetUserRole()
     {
         return UserRole;
+    }
+
+    public string GetRoleDescription()
+    {
+        return RoleDescription;
     }
 }

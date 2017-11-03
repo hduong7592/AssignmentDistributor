@@ -12,5 +12,6 @@
             </tr>
         </table>
     </div>
+    <asp:Label ID="ScriptLB" runat="server" Text=""></asp:Label>
 </asp:Content>
 

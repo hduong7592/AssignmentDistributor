@@ -32,29 +32,36 @@ public partial class Display_Home : System.Web.UI.Page
         LogoutLB.Attributes.Add("onclick", "Logout('"+SessionID+"');");
         LogoutLB.Text = "(Logout)";
 
+        RoleLB.Text = user.GetRoleDescription();
+
         DataTable Table = new DataTable();
 
         int userRole = user.GetUserRole();
-        switch (userRole)
+        try
         {
-            case 1:
-                Table = AppData.GetAdminnData();
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-
-            default:
-
-                break;
+            switch (userRole)
+            {
+                case 1:
+                    Table = AppData.GetAdminData();
+                    break;
+                case 2:
+                    Table = AppData.GetAdminData();
+                    break;
+                case 3:
+                    Table = AppData.GetTeacherData(userID);
+                    break;
+                case 4:
+                    Table = AppData.GetStudentData(userID);
+                    break;
+                default:
+                    Table = new DataTable();
+                    break;
+            }
         }
-
+        catch (Exception ex)
+        {
+            Response.Write(ex.ToString());
+        }
         GridView1.DataSource = Table;
         GridView1.DataBind();
     }

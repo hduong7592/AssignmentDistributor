@@ -6,8 +6,8 @@
 <head runat="server">
     <title>Assignment Distribution App</title>
     <link href="Styles/Menu.css" rel="stylesheet" />
-    <link href="Styles/Style.css" rel="stylesheet" />
-    <link href="Style/themes/base/jquery.ui.all.css" rel="stylesheet" /> 
+    <link href="Styles/Style.css" rel="stylesheet" />  
+    <link href="Styles/themes/base/jquery.ui.all.css" rel="stylesheet" />
     <script src="Scripts/jquery-1.11.0.min.js"></script>
     <script src="Scripts/jquery-ui.js"></script>
     <script src="Scripts/jquery.json.js"></script>
@@ -49,6 +49,12 @@
         .auto-style1 {
             color: #FFFFFF;
         }
+        .auto-style3 {
+            color: #FFFFFF;
+            width: 80%;
+            text-align: center;
+            font-size: xx-large;
+        }
     </style>
 
   
@@ -57,7 +63,13 @@
     <form id="form1" runat="server">   
     <div id="header-wrap">
         <div id="header-container">            
-           
+            <table align="center" cellpadding="2" style="width:100%; height: 100px;">
+                <tr>
+                    <td style="width: 10%">&nbsp;</td>
+                    <td class="auto-style3">Assignments Distributor</td>
+                    <td style="width: 10%">&nbsp;</td>
+                </tr>
+            </table>
         </div>                
     </div>       
     <div id="container">

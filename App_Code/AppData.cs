@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Configuration;
-
+using System.Collections;
 
 /// <summary>
 /// Summary description for AppData
@@ -80,9 +80,12 @@ public class AppData
                 command.Connection = con;
 
                 command.CommandType = CommandType.Text;
-                command.CommandText = @"        SELECT users.* 
-                                                FROM [Users] users
-                                                Where users.UserID = @UserID
+                command.CommandText = @"        SELECT  users.* 
+			                                            ,roles.RoleName
+                                                FROM    [Users] users
+													    ,[Roles] roles
+                                                Where   users.UserID = @UserID
+												And	    roles.RoleID = users.UserRole
                             ";
 
                 sda.SelectCommand = command;
@@ -127,9 +130,12 @@ public class AppData
                 command.Connection = con;
 
                 command.CommandType = CommandType.Text;
-                command.CommandText = @"        SELECT users.* 
-                                                FROM [Users] users
-                                                Where users.UserRefID = @UserRefID
+                command.CommandText = @"        SELECT  users.* 
+			                                            ,roles.RoleName
+                                                FROM    [Users] users
+													    ,[Roles] roles
+                                                Where   users.UserRefID = @UserRefID
+												And	    roles.RoleID = users.UserRole
                             ";
 
                 sda.SelectCommand = command;
@@ -174,8 +180,11 @@ public class AppData
                 command.Connection = con;
 
                 command.CommandType = CommandType.Text;
-                command.CommandText = @"        SELECT users.* 
-                                                FROM [Users] users                                              
+                command.CommandText = @"        SELECT  users.* 
+			                                            ,roles.RoleName
+                                                FROM    [Users] users
+													    ,[Roles] roles
+                                                Where   roles.RoleID = users.UserRole                                           
                             ";
 
                 sda.SelectCommand = command;
@@ -545,7 +554,7 @@ public class AppData
                                                 FROM    [LogedIn_Logs] logs
 														,[Users] users
                                                 Where	logs.Username = users.Username
-												And		logs.SessionID = '0r1yyoi11kwvm0zka5gaunl5'                                               
+												And		logs.SessionID = @SessionID                                          
                                                 And		logs.Validate = 'Yes'
                             ";
 
@@ -1501,6 +1510,131 @@ public class AppData
         return insertresult;
     }
 
+    public static string DeleteAssignment( int userID, int aID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Assignments] 
+                                        WHERE [aID] = @aID
+                                        ";
+                
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@aID", aID);
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static string DeleteAllAssignments(int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Assignments]                                       
+                                        ";
+
+                command.Parameters.AddWithValue("@userID", userID);               
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static string DeleteAllAssignedAssignments(int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Assignments_Assigned]                                       
+                                        ";
+
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
     public static string UpdateCourse(string courseName, string courseSession, int courseID, int userID)
     {
 
@@ -1571,6 +1705,47 @@ public class AppData
 
                 command.Parameters.AddWithValue("@userID", userID);
                 command.Parameters.AddWithValue("@courseID", courseID);
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static string DeleteAllCouse(int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Courses] 
+                                        ";
+
+                command.Parameters.AddWithValue("@userID", userID);
                 command.Parameters.AddWithValue("@datetime", DateTime.Now);
 
                 try
@@ -1687,6 +1862,47 @@ public class AppData
         return insertresult;
     }
 
+    public static string DeleteAllChapters(int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Chapters] 
+                                        ";
+
+                command.Parameters.AddWithValue("@userID", userID);               
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
     public static DataTable GetAssignedCourses(int userID)
     {
         string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
@@ -1711,6 +1927,95 @@ public class AppData
                 sda.SelectCommand = command;
 
                 command.Parameters.AddWithValue("@userID", userID);
+
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
+    public static string DeleteAllAssignedCourses(int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"DELETE FROM [Courses_Assigned] 
+                                        ";
+
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception ex)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static DataTable GetStudentsInCourse(int courseID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"        SELECT courses.* 
+                                                FROM [Courses_Assigned] courses
+                                                Where
+                                                     courses.CourseID = @courseID                                              
+                            ";
+
+                sda.SelectCommand = command;
+                
+                command.Parameters.AddWithValue("@courseID", courseID);
 
                 try
                 {
@@ -1897,6 +2202,59 @@ public class AppData
 
     }
 
+    public static DataTable CheckAssignedAssignments(int userID, int chapterID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"          Select assigns.*		                                                
+
+                                                  FROM [Assignments_Assigned] assigns		                                                
+                                                  WHERE			                                                
+                                                       
+                                                        assigns.UserID = @userID
+                                                  AND   assigns.ChapterID = @chapterID                                                  
+                                              
+                            ";
+
+                sda.SelectCommand = command;
+
+                command.Parameters.AddWithValue("@userID", userID);               
+                command.Parameters.AddWithValue("@chapterID", chapterID);
+                
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
     public static string AssignCourse(int courseID, int userID)
     {
 
@@ -1951,7 +2309,68 @@ public class AppData
         return insertresult;
     }
 
-    public static DataTable GetAdminnData()
+    public static string AssignAssignment(int studentID, int aID, int chapterID, int courseID, int userID)
+    {
+
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        string insertresult;
+
+        using (SqlConnection conn = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = @"INSERT INTO [Assignments_Assigned]
+                                        (
+                                               [UserID]
+                                              ,[aID]
+                                              ,[ChapterID]
+                                              ,[CourseID]
+                                              ,[Added_by]
+                                              ,[Added_datetime]                                                                                                                
+                                        )
+                            VALUES      (
+                                            @studentID 
+                                            ,@aID
+                                            ,@chapterID
+                                            ,@courseID                                            
+                                            ,@userID                                         
+                                            ,@datetime
+                                        )";
+
+                command.Parameters.AddWithValue("@studentID", studentID);
+                command.Parameters.AddWithValue("@aID", aID);
+                command.Parameters.AddWithValue("@chapterID", chapterID);
+                command.Parameters.AddWithValue("@courseID", courseID);   
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@Active", "Yes");
+                command.Parameters.AddWithValue("@datetime", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    insertresult = "Success";
+                }
+
+                catch (Exception e)
+                {
+                    insertresult = "Error";
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+        return insertresult;
+    }
+
+    public static DataTable GetAdminData()
     {
         string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
 
@@ -2006,6 +2425,138 @@ public class AppData
             }
         }
         return dt;
+
+    }
+
+    public static DataTable GetTeacherData(int userID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"         Select (courses.CourseName + ' - ' + courses.CourseSession) as CourseName
+	                                                    ,(chapters.ChapterName + ': ' + chapters.ChapterDescription) as Chapter
+	                                                    ,assignments.aDescription as Assignment
+	                                                    ,(Select users.FirstName + ' ' + users.LastName
+		                                                    From [Users] users
+		                                                    Where users.UserID = assigned.UserID) as AssignedTo
+
+                                                  From [Courses] courses
+		                                                ,[Chapters] chapters
+		                                                ,[Assignments] assignments
+		                                                LEFT OUTER JOIN [Assignments_Assigned] assigned
+		                                                ON assignments.aID = assigned.aID
+		
+		
+                                                 Where courses.CourseID = chapters.CourseID
+                                                 And   chapters.ChapterID = assignments.ChapterID
+                                                 And   courses.Added_by = @userID 
+                            ";
+
+                sda.SelectCommand = command;
+                command.Parameters.AddWithValue("@userID", userID);
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
+    public static DataTable GetStudentData(int userID)
+    {
+        string NewDsnConnection = ConfigurationManager.ConnectionStrings["dsn"].ToString();
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection con = new SqlConnection(NewDsnConnection))
+        {
+            using (SqlDataAdapter sda = new SqlDataAdapter())
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = con;
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = @"            Select    (courses.CourseName + ' - ' + courses.CourseSession) as CourseName	                                                   
+                                                             ,(chapters.ChapterName + ': ' + chapters.ChapterDescription) as Chapter
+		                                                     ,assignments.aDescription as Assignment
+                                                     From   [Courses] courses
+													        ,[Courses_Assigned] cassigned
+													        ,[Chapters] chapters
+		                                                    ,[Assignments] assignments                                             
+													        ,[Assignments_Assigned] assigned
+		
+                                                     Where 
+													       courses.CourseID = cassigned.CourseID  
+											         And   courses.CourseID = chapters.CourseID 
+												     And   chapters.ChapterID = assignments.ChapterID 
+												     And   assignments.aID = assigned.aID   
+												     And   assigned.UserID = @userID                                      
+                                                     And   cassigned.UserID = @userID
+                            ";
+
+                sda.SelectCommand = command;
+                command.Parameters.AddWithValue("@userID", userID);
+                try
+                {
+                    con.Open();
+                    sda.Fill(dt);
+                }
+
+                catch (Exception e)
+                {
+                    string msg_subject = "Error";
+                    string msg_content = "Error: " + e.ToString();
+
+                    //SendMail.SendErrorMessage(msg_subject, msg_content);
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        return dt;
+
+    }
+
+    public static ArrayList RandomOrder(ArrayList arrList)
+    {
+        Random r = new Random();
+        for (int cnt = 0; cnt < arrList.Count; cnt++)
+        {
+            object tmp = arrList[cnt];
+            int idx = r.Next(arrList.Count - cnt) + cnt;
+            arrList[cnt] = arrList[idx];
+            arrList[idx] = tmp;
+        }
+
+        return arrList;
 
     }
 }

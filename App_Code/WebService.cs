@@ -516,6 +516,17 @@ public class WebService : System.Web.Services.WebService
         return result;
     }
 
+
+    [WebMethod(EnableSession = true)]
+    public string DeleteAssignment(int aID, int userID)
+    {
+        string result = "";
+
+        result = AppData.DeleteAssignment(userID, aID);
+
+        return result;
+    }
+
     [WebMethod(EnableSession = true)]
     public string GetCourseDetail(int courseID)
     {
@@ -668,4 +679,141 @@ public class WebService : System.Web.Services.WebService
         return result;
     }
 
+    [WebMethod(EnableSession = true)]
+    public string Logout(string SessionID)
+    {     
+        string result = "";
+
+        result = AppData.UpdateSession(SessionID);
+       
+        return result;
+    }
+
+    [WebMethod(EnableSession = true)]
+    public string DeleteAll(int userID)
+    {
+        string result = "";
+
+        result = AppData.DeleteAllCouse(userID);
+        result = AppData.DeleteAllChapters(userID);
+        result = AppData.DeleteAllAssignments(userID);
+        result = AppData.DeleteAllAssignedCourses(userID);
+        result = AppData.DeleteAllAssignedAssignments(userID);
+
+        return result;
+    }
+
+    [WebMethod(EnableSession = true)]
+    public string AssignAssignments( int userID)
+    {
+        string result = "";
+
+        ArrayList courseList = new ArrayList();
+
+
+        DataTable coursesTB = AppData.GetCourses(userID);
+        if (coursesTB.Rows.Count > 0)
+        {
+            foreach (DataRow row in coursesTB.Rows)
+            {
+                int courseID = Convert.ToInt16(row["courseID"]);
+                courseList.Add(courseID);
+
+                DataTable studentsTB = AppData.GetStudentsInCourse(courseID);
+                ArrayList chapterList = new ArrayList();
+
+                DataTable chaptersTB = AppData.GetChapters(courseID);
+                if (chaptersTB.Rows.Count > 0)
+                {
+                    foreach (DataRow chapter in chaptersTB.Rows)
+                    {
+                        ArrayList studentList = new ArrayList();
+                        ArrayList assignmentList = new ArrayList();
+
+                        int chapterID = Convert.ToInt32(chapter["ChapterID"]);
+                        chapterList.Add(chapterID);
+
+                        if (studentsTB.Rows.Count > 0)
+                        {
+                            foreach (DataRow student in studentsTB.Rows)
+                            {
+                                int studentID = Convert.ToInt32(student["UserID"]);
+
+                                DataTable checkAssignmentTB = AppData.CheckAssignedAssignments(studentID, chapterID);
+                                if (checkAssignmentTB.Rows.Count > 0)
+                                {
+                                    //Do nothing
+                                }
+                                else
+                                {
+                                    studentList.Add(studentID);
+                                }
+
+
+                            }
+                        }
+
+                        DataTable assignmentsTB = AppData.GetAssignments(chapterID);
+                        if (assignmentsTB.Rows.Count > 0)
+                        {
+                            int i = 0;
+                            foreach (DataRow a in assignmentsTB.Rows)
+                            {
+                                int aID = Convert.ToInt32(a["aID"]);
+                                assignmentList.Add(aID);
+                            }
+                        }
+
+
+                        //assignmentList = RandomOrder(assignmentList);
+                        studentList = AppData.RandomOrder(studentList);
+
+                        //If number of assignment larger or equal number of students in class
+                        //loop through the assignment list with the student list randomized
+                        //assign each assignment to the randomize student list.
+                        if (assignmentList.Count >= studentList.Count)
+                        {
+                            for (int i = 0; i < assignmentList.Count; i++)
+                            {
+                                int aID = Convert.ToInt32(assignmentList[i]);
+                                int studentID = 0;
+                                try
+                                {
+                                    studentID = Convert.ToInt32(studentList[i]);
+                                }
+                                catch
+                                {
+                                    studentID = 0;
+                                }
+
+                                if (studentID > 0)
+                                {
+                                    result = AppData.AssignAssignment(studentID, aID, chapterID, courseID, userID);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //If number of assignments less than number of students
+                            //then generate a random index number
+                            //for each student, assign the assignment with that random index number
+                            //Or just randomize the arraylist and get the first index
+                            //Or the combination of both
+                            foreach (int studentID in studentList)
+                            {
+                                assignmentList = AppData.RandomOrder(assignmentList);
+                                int aID = Convert.ToInt32(assignmentList[0]);
+                                result = AppData.AssignAssignment(studentID, aID, chapterID, courseID, userID);
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+        }  
+        return result;
+    }
 }
